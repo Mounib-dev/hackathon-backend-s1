@@ -1,12 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config();
 
-import express, { RequestHandler } from "express";
+import express, { NextFunction, Request, Response } from "express";
+
+import { AppDataSource } from "./data-source";
+
 import morgan from "morgan";
 import helmet from "helmet";
 import cors from "cors";
 
-import api from "./api/index";
+import apiRoute from "./routes/index.route";
+
+import registerRoutes from "./routes/auth/register.route";
+import loginRoute from "./routes/auth/login.route";
 
 const app = express();
 
@@ -15,13 +21,22 @@ app.use(helmet());
 app.use(cors());
 app.use(express.json());
 
-app.get<RequestHandler>("/", (req, res) => {
-  res.json({
-    message: "Welcome to Node.js Express.js with TypeScript",
+AppDataSource.initialize()
+  .then(() => {
+    console.log("🛢️  Connected To Database");
+  })
+  .catch(() => {
+    console.log("⚠️ Error to connect Database");
   });
-});
 
-app.use("/api/v1", api);
+app.use("/api/v1", apiRoute);
+app.use("/api/v1/user", registerRoutes);
+app.use("/api/v1/auth", loginRoute);
+
+app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
+  console.error(err);
+  res.status(500).json({ message: err.message });
+});
 
 const port = process.env.PORT || 3000;
 
