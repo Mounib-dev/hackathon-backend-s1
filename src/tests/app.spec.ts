@@ -7,7 +7,7 @@ describe("GET /", () => {
     const response = await request(app).get("/");
     expect(response.status).toBe(200);
     expect(response.body).toEqual({
-      message: "Welcome to Node.js Express.js with TypeScript",
+      message: "API V1",
     });
   });
 });
