@@ -6,12 +6,12 @@ import bcrypt from "bcrypt";
 const saltRound = 10;
 
 export const createUser = async (req: Request, res: Response): Promise<any> => {
-  const { firstname, lastname, birthDate, phoneNumber, email, password } =
+  const { firstName, lastName, birthDate, phoneNumber, email, password } =
     req.body;
   const hashedPassword = await bcrypt.hash(password, saltRound);
   const user = new User(
-    firstname,
-    lastname,
+    firstName,
+    lastName,
     birthDate,
     phoneNumber,
     email,
