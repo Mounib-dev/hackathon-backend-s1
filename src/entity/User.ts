@@ -1,4 +1,5 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
+import { Alert } from "./Alert";
 
 @Entity()
 export class User {
@@ -17,11 +18,14 @@ export class User {
   @Column()
   phoneNumber: string;
 
-  @Column()
+  @Column({ unique: true })
   email: string;
 
   @Column()
   password: string;
+
+  @OneToMany(() => Alert, (alert) => alert.user)
+  alerts!: Alert[];
 
   constructor(
     firstName: string,

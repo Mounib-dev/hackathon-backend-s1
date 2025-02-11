@@ -14,6 +14,8 @@ import apiRoute from "./routes/index.route";
 import registerRoutes from "./routes/auth/register.route";
 import loginRoute from "./routes/auth/login.route";
 
+import alertRoutes from "./routes/alert/alert.route";
+
 const app = express();
 
 app.use(morgan("dev"));
@@ -32,6 +34,7 @@ AppDataSource.initialize()
 app.use("/api/v1", apiRoute);
 app.use("/api/v1/user", registerRoutes);
 app.use("/api/v1/auth", loginRoute);
+app.use("/api/v1/alert", alertRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
