@@ -3,6 +3,7 @@ import { Alert } from "../../entity/Alert";
 import { AppDataSource } from "../../data-source";
 import { AuthenticatedRequest } from "../../middlewares/authorize";
 import { User } from "../../entity/User";
+import { io } from "../../app";
 
 export const createAlert: RequestHandler = async (
   req: AuthenticatedRequest,
@@ -28,6 +29,10 @@ export const createAlert: RequestHandler = async (
     });
     try {
       await alertRepository.save(newAlert);
+      io.emit("new-alert", {
+        title,
+        location,
+      });
       return res.status(201).json({
         message: `Alerte créée : ${newAlert}}`,
       });

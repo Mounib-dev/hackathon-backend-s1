@@ -3,6 +3,9 @@ dotenv.config();
 
 import express, { NextFunction, Request, Response } from "express";
 
+import { createServer } from "http";
+import { Server } from "socket.io";
+
 import { AppDataSource } from "./data-source";
 
 import morgan from "morgan";
@@ -44,8 +47,21 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
 
 const port = process.env.PORT || 3000;
 
-app.listen(port, () => {
+const server = createServer(app);
+export const io = new Server(server, {
+  cors: { origin: "http://localhost:5173" },
+});
+
+io.on("connection", (socket) => {
+  console.log("A user connected");
+
+  socket.on("disconnect", () => {
+    console.log("User disconnected");
+  });
+});
+
+server.listen(port, () => {
   console.log(`[server]:🗄️  Server is running at http://localhost:${port}`);
 });
 
-export default app;
+export default server;
