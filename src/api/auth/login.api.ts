@@ -1,6 +1,6 @@
 import type { Request, Response } from "express";
 import type { Credentials } from "../../types/auth.types";
-import type { Secret } from "jsonwebtoken";
+import type { JwtPayload, Secret } from "jsonwebtoken";
 
 import { User } from "../../entity/User";
 import { AppDataSource } from "../../data-source";
@@ -8,6 +8,10 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const JWT_SECRET = <Secret>process.env.JWT_SECRET;
+
+export interface AuthPayload extends JwtPayload {
+  id: number;
+}
 
 export const login = async (req: Request, res: Response): Promise<any> => {
   const { email, password } = <Credentials>req.body;
@@ -28,9 +32,8 @@ export const login = async (req: Request, res: Response): Promise<any> => {
       });
     }
 
-    const payload = {
-      userId: user.id,
-      username: user.email,
+    const payload: AuthPayload = {
+      id: user.id,
     };
 
     const token = jwt.sign(payload, JWT_SECRET, {
