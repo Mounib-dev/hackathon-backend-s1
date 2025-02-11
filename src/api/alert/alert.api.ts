@@ -19,6 +19,7 @@ export const createAlert: RequestHandler = async (
     },
   });
   const alertRepository = AppDataSource.getRepository(Alert);
+  // Add Town
   if (user) {
     const newAlert = alertRepository.create({
       title,
@@ -30,8 +31,7 @@ export const createAlert: RequestHandler = async (
     try {
       await alertRepository.save(newAlert);
       io.emit("new-alert", {
-        title,
-        location,
+        content: `${title} à ${location}`,
       });
       return res.status(201).json({
         message: `Alerte créée : ${newAlert}}`,
