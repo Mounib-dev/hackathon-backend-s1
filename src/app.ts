@@ -55,6 +55,12 @@ export const io = new Server(server, {
 io.on("connection", (socket) => {
   console.log("A user connected");
 
+  socket.on("sendMessage", (message) => {
+    console.log("New Message:", message);
+
+    io.emit("receiveMessage", message);
+  });
+
   socket.on("disconnect", () => {
     console.log("User disconnected");
   });
