@@ -10,7 +10,7 @@ export const createAlert: RequestHandler = async (
   res,
   next
 ): Promise<any> => {
-  const { title, description, priorityLevel, location } = req.body;
+  const { category, title, description, priorityLevel, location } = req.body;
   const userId = req.user?.id;
   const userRepository = AppDataSource.getRepository(User);
   const user = await userRepository.findOne({
@@ -22,6 +22,7 @@ export const createAlert: RequestHandler = async (
   // Add Town
   if (user) {
     const newAlert = alertRepository.create({
+      category,
       title,
       description,
       priorityLevel,
