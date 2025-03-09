@@ -19,6 +19,7 @@ import loginRoute from "./routes/auth/login.route";
 import userRoute from "./routes/auth/profile.route";
 
 import alertRoutes from "./routes/alert/alert.route";
+import chatBotRoutes from "./routes/chatbot/chatbot.route";
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use("/api/v1", apiRoute);
 app.use("/api/v1/user", registerRoutes, userRoute);
 app.use("/api/v1/auth", loginRoute);
 app.use("/api/v1/alert", alertRoutes);
+app.use("/api/v1/chatbot", chatBotRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
