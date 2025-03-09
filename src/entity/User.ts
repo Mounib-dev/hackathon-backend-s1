@@ -1,5 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Alert } from "./Alert";
+import { ChatbotConversation } from "./ChatbotConversation";
 
 @Entity()
 export class User {
@@ -26,6 +27,12 @@ export class User {
 
   @OneToMany(() => Alert, (alert) => alert.user)
   alerts!: Alert[];
+
+  @OneToMany(
+    () => ChatbotConversation,
+    (chatbotConversation) => chatbotConversation.user
+  )
+  chatbotConversations!: ChatbotConversation[];
 
   constructor(
     firstName: string,

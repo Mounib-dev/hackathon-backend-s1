@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 
 import { User } from "./entity/User";
 import { Alert } from "./entity/Alert";
+import { ChatbotConversation } from "./entity/ChatbotConversation";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -13,7 +14,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Alert],
+  entities: [User, Alert, ChatbotConversation],
   migrations: [],
   subscribers: [],
 });
