@@ -19,7 +19,8 @@ import loginRoute from "./routes/auth/login.route";
 import userRoute from "./routes/auth/profile.route";
 
 import alertRoutes from "./routes/alert/alert.route";
-import chatBotRoutes from "./routes/chatbot/chatbot.route";
+import chatBotRoutes from "./routes/ai-assistance/chatbot.route";
+import aiAssistantRoutes from "./routes/ai-assistance/assistant";
 
 const app = express();
 
@@ -41,6 +42,7 @@ app.use("/api/v1/user", registerRoutes, userRoute);
 app.use("/api/v1/auth", loginRoute);
 app.use("/api/v1/alert", alertRoutes);
 app.use("/api/v1/chatbot", chatBotRoutes);
+app.use("/api/v1/ai-assistant", aiAssistantRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
@@ -56,6 +58,9 @@ export const io = new Server(server, {
 
 io.on("connection", (socket) => {
   console.log("A user connected");
+  // io.on("userData", (user) => {
+  //   console.log(user);
+  // });
 
   socket.on("sendMessage", (message) => {
     console.log("New Message:", message);

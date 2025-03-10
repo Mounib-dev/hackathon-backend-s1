@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { chatBot, chatBotHistory } from "../../api/chatbot/chatbot";
+import { chatBot, chatBotHistory } from "../../api/ai-assistance/chatbot";
 import authorizeUser from "../../middlewares/authorize";
 
 const router = Router();
