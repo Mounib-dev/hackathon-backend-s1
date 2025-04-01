@@ -15,7 +15,7 @@ export const userInfo: RequestHandler = async (
       where: {
         id: req.user?.id,
       },
-      select: ["firstName", "lastName"],
+      select: ["firstName", "lastName", "id"],
     });
     if (!user) {
       return res.status(404).json({
