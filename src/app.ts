@@ -22,6 +22,9 @@ import alertRoutes from "./routes/alert/alert.route";
 import chatBotRoutes from "./routes/ai-assistance/chatbot.route";
 import aiAssistantRoutes from "./routes/ai-assistance/assistant";
 import chatRoomsRoutes from "./routes/chatroom/chatroom.route";
+import { User } from "./entity/User";
+import { ChatRoom } from "./entity/ChatRoom";
+import { Message } from "./entity/Message";
 
 const app = express();
 
@@ -59,20 +62,58 @@ export const io = new Server(server, {
   cors: { origin: "http://localhost:5173" },
 });
 
+app.set("io", io);
+
+// io.on("connection", (socket) => {
+//   console.log("A user connected");
+//   // io.on("userData", (user) => {
+//   //   console.log(user);
+//   // });
+
+//   socket.on("sendMessage", (message) => {
+//     console.log("New Message:", message);
+
+//     io.emit("receiveMessage", message);
+//   });
+
+//   socket.on("disconnect", () => {
+//     console.log("User disconnected");
+//   });
+// });
+
 io.on("connection", (socket) => {
-  console.log("A user connected");
-  // io.on("userData", (user) => {
-  //   console.log(user);
-  // });
+  console.log("🔌 New client connected");
 
-  socket.on("sendMessage", (message) => {
-    console.log("New Message:", message);
+  socket.on("joinRoom", (roomId) => {
+    socket.join(roomId);
+    console.log(`📌 User joined room: ${roomId}`);
+  });
 
-    io.emit("receiveMessage", message);
+  socket.on("sendMessage", async (data) => {
+    const { text, fileUrl, userId, roomId } = data;
+
+    const user = await AppDataSource.getRepository(User).findOne({
+      where: { id: userId },
+    });
+    const room = await AppDataSource.getRepository(ChatRoom).findOne({
+      where: { id: roomId },
+    });
+
+    if (!user || !room) return;
+
+    const message = AppDataSource.getRepository(Message).create({
+      text,
+      fileUrl,
+      user,
+      room,
+    });
+    // await AppDataSource.getRepository(Message).save(message);
+
+    io.to(roomId).emit("receiveMessage", message);
   });
 
   socket.on("disconnect", () => {
-    console.log("User disconnected");
+    console.log("❌ User disconnected");
   });
 });
 
