@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Alert } from "./Alert";
 import { ChatbotConversation } from "./ChatbotConversation";
+import { Message } from "./Message";
 
 @Entity()
 export class User {
@@ -33,6 +34,9 @@ export class User {
     (chatbotConversation) => chatbotConversation.user
   )
   chatbotConversations!: ChatbotConversation[];
+
+  @OneToMany(() => Message, (message) => message.user)
+  messages!: Message[];
 
   constructor(
     firstName: string,
