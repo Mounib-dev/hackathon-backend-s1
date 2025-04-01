@@ -21,6 +21,7 @@ import userRoute from "./routes/auth/profile.route";
 import alertRoutes from "./routes/alert/alert.route";
 import chatBotRoutes from "./routes/ai-assistance/chatbot.route";
 import aiAssistantRoutes from "./routes/ai-assistance/assistant";
+import chatRoomsRoutes from "./routes/chatroom/chatroom.route";
 
 const app = express();
 
@@ -33,7 +34,8 @@ AppDataSource.initialize()
   .then(() => {
     console.log("🛢️  Connected To Database");
   })
-  .catch(() => {
+  .catch((err) => {
+    console.error(err);
     console.log("⚠️ Error to connect Database");
   });
 
@@ -43,6 +45,7 @@ app.use("/api/v1/auth", loginRoute);
 app.use("/api/v1/alert", alertRoutes);
 app.use("/api/v1/chatbot", chatBotRoutes);
 app.use("/api/v1/ai-assistant", aiAssistantRoutes);
+app.use("/api/v1/chatroom", chatRoomsRoutes);
 
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
