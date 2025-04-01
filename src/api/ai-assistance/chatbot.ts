@@ -5,6 +5,7 @@ import { AuthenticatedRequest } from "../../middlewares/authorize";
 
 import { ChatbotConversation } from "../../entity/ChatbotConversation";
 import { AppDataSource } from "../../data-source";
+import { User } from "../../entity/User";
 
 const model = openai("gpt-4o");
 
@@ -49,6 +50,22 @@ export const chatBot: RequestHandler = async (
     const ChatbotConversationRepository =
       AppDataSource.getRepository(ChatbotConversation);
     if (userId) {
+      const UserRepository = AppDataSource.getRepository(User);
+      const currentUser = await UserRepository.find({
+        where: {
+          id: userId,
+        },
+      });
+      if (currentUser) {
+        const previousHistory = await ChatbotConversationRepository.find({
+          where: { user: currentUser },
+        });
+        if (previousHistory.length > 0) {
+          ChatbotConversationRepository.delete({
+            id: previousHistory[0].id,
+          });
+        }
+      }
       const chatbotConversation = ChatbotConversationRepository.create({
         user: { id: userId },
         messages: [...messages, { role: "assistant", content: fullResponse }],
