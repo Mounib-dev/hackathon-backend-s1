@@ -65,6 +65,13 @@ export const getChatRoomMessages: RequestHandler = async (
   const messages = await AppDataSource.getRepository(Message).find({
     where: { room: { id: Number(roomId) } },
     relations: ["user"],
+    select: {
+      user: {
+        id: true,
+        firstName: true,
+        lastName: true,
+      },
+    },
     order: { createdAt: "ASC" },
   });
 
