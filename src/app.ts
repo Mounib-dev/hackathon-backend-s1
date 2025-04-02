@@ -17,6 +17,7 @@ import apiRoute from "./routes/index.route";
 import registerRoutes from "./routes/auth/register.route";
 import loginRoute from "./routes/auth/login.route";
 import userRoute from "./routes/auth/profile.route";
+import usersRoute from "./routes/auth/users.route";
 
 import alertRoutes from "./routes/alert/alert.route";
 import chatBotRoutes from "./routes/ai-assistance/chatbot.route";
@@ -43,7 +44,7 @@ AppDataSource.initialize()
   });
 
 app.use("/api/v1", apiRoute);
-app.use("/api/v1/user", registerRoutes, userRoute);
+app.use("/api/v1/user", registerRoutes, userRoute, usersRoute);
 app.use("/api/v1/auth", loginRoute);
 app.use("/api/v1/alert", alertRoutes);
 app.use("/api/v1/chatbot", chatBotRoutes);
