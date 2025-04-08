@@ -70,3 +70,34 @@ export const retrieveAlerts: RequestHandler = async (
     });
   }
 };
+
+export const updateAlert: RequestHandler<{ id: string }> = async (
+  req: AuthenticatedRequest,
+  res,
+  next
+): Promise<any> => {
+  const id = req.params.id;
+  const alertRepository = AppDataSource.getRepository(Alert);
+  try {
+    const alert = await alertRepository.findOne({ where: { id: +id } });
+    if (!alert) {
+      return res.status(404).json({
+        message: "Le besoin que vous essayez de mettre à jour n'existe pas",
+      });
+    }
+    const { category, title, description, priorityLevel, location } = req.body;
+    alert.category = category ?? alert.category;
+    alert.title = title ?? alert.title;
+    alert.description = description ?? alert.description;
+    alert.priorityLevel = priorityLevel ?? alert.priorityLevel;
+    alert.location = location ?? alert.location;
+
+    await alertRepository.save(alert);
+    return res.status(200).json(alert);
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Une erreur est survenue lors de la modification de l'alerte",
+    });
+  }
+};
