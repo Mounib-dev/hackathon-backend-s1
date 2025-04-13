@@ -101,3 +101,27 @@ export const updateAlert: RequestHandler<{ id: string }> = async (
     });
   }
 };
+
+export const deleteAlert: RequestHandler<{ id: string }> = async (
+  req: AuthenticatedRequest,
+  res,
+  next
+): Promise<any> => {
+  const id = req.params.id;
+  console.log(id);
+  const alertRepository = AppDataSource.getRepository(Alert);
+  try {
+    const alert = await alertRepository.delete(id);
+    if (alert.affected! === 0) {
+      return res.status(404).json({
+        message: "Le besoin que vous essayez de supprimer n'existe pas",
+      });
+    }
+    return res.status(204).send();
+  } catch (err: any) {
+    console.error(err);
+    return res.status(500).json({
+      message: "Une erreur est survenue lors de la suppression de l'alerte",
+    });
+  }
+};

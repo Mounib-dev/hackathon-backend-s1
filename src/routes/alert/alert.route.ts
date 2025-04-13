@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createAlert,
+  deleteAlert,
   retrieveAlerts,
   updateAlert,
 } from "../../api/alert/alert.api";
@@ -13,4 +14,7 @@ router.post("/create", authorizeUser, createAlert);
 router.get("/list", authorizeUser, retrieveAlerts);
 
 router.put("/:id", authorizeUser, updateAlert);
+
+router.delete("/:id", authorizeUser, deleteAlert);
+
 export default router;
