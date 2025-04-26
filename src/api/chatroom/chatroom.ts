@@ -20,6 +20,7 @@ export const createChatRoom: RequestHandler = async (
     await ChatRoomRepository.save(chatRoom);
     return res.status(201).json({
       message: `Salon ${chatRoom.name} créé avec succès`,
+      chatRoomId: chatRoom.id,
     });
   } catch (err: any) {
     if (err.code === "23505") {
@@ -62,6 +63,7 @@ export const getChatRoomMessages: RequestHandler = async (
   next
 ): Promise<any> => {
   const { roomId } = req.params;
+  console.log(roomId);
   const messages = await AppDataSource.getRepository(Message).find({
     where: { room: { id: Number(roomId) } },
     relations: ["user"],
