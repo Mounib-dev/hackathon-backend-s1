@@ -11,6 +11,7 @@ const JWT_SECRET = <Secret>process.env.JWT_SECRET;
 
 export interface AuthPayload extends JwtPayload {
   id: number;
+  role: string;
 }
 
 export const login = async (req: Request, res: Response): Promise<any> => {
@@ -20,6 +21,13 @@ export const login = async (req: Request, res: Response): Promise<any> => {
     const user = await userRepisitory.findOneBy({
       email: email,
     });
+
+    if (user && !user.confirmedEmail) {
+      return res.status(403).json({
+        message: "Vous devez d'abord valider votre adresse email.",
+      });
+    }
+
     if (!user) {
       return res.status(401).json({
         message: "Unauthorized",
@@ -34,6 +42,7 @@ export const login = async (req: Request, res: Response): Promise<any> => {
 
     const payload: AuthPayload = {
       id: user.id,
+      role: user.role,
     };
 
     const token = jwt.sign(payload, JWT_SECRET, {
