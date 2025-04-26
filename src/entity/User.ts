@@ -3,6 +3,11 @@ import { Alert } from "./Alert";
 import { ChatbotConversation } from "./ChatbotConversation";
 import { Message } from "./Message";
 
+export enum UserRole {
+  USER = "user",
+  ADMIN = "admin",
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -26,6 +31,12 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
+  role: UserRole;
+
+  @Column({ default: false })
+  confirmedEmail: boolean;
+
   @OneToMany(() => Alert, (alert) => alert.user)
   alerts!: Alert[];
 
@@ -44,7 +55,9 @@ export class User {
     birthDate: Date,
     phoneNumber: string,
     email: string,
-    password: string
+    password: string,
+    role: UserRole,
+    confirmedEmail: boolean
   ) {
     this.firstName = firstName;
     this.lastName = lastName;
@@ -52,5 +65,7 @@ export class User {
     this.phoneNumber = phoneNumber;
     this.email = email;
     this.password = password;
+    this.role = role;
+    this.confirmedEmail = confirmedEmail;
   }
 }
