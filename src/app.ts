@@ -113,6 +113,22 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("receiveMessage", message);
   });
 
+  socket.on("joinAlertRoom", (alertRoomId) => {
+    socket.join(alertRoomId);
+    console.log(`📌 User joined alert room: ${alertRoomId}`);
+  });
+
+  socket.on("sendAlertMessage", async (data) => {
+    console.log(data);
+    const { senderName, message, createdAt, alertId } = data;
+    io.to(alertId).emit("receiveAlertMessage", {
+      senderName,
+      message,
+      createdAt,
+      alertId,
+    });
+  });
+
   socket.on("disconnect", () => {
     console.log("❌ User disconnected");
   });
