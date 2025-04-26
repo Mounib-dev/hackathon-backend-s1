@@ -1,9 +1,15 @@
 import type { Request, Response } from "express";
-import { User } from "../../entity/User";
+import type { Secret } from "jsonwebtoken";
+
+import { User, UserRole } from "../../entity/User";
 import { AppDataSource } from "../../data-source";
 import bcrypt from "bcrypt";
 
+import jwt from "jsonwebtoken";
+import { sendConfirmationEmail } from "../../utils/mailer";
+
 const saltRound = 10;
+const JWT_SECRET = <Secret>process.env.JWT_SECRET;
 
 export const createUser = async (req: Request, res: Response): Promise<any> => {
   const { firstName, lastName, birthDate, phoneNumber, email, password } =
@@ -15,13 +21,21 @@ export const createUser = async (req: Request, res: Response): Promise<any> => {
     birthDate,
     phoneNumber,
     email,
-    hashedPassword
+    hashedPassword,
+    UserRole.USER,
+    false
   );
   const userRepository = AppDataSource.getRepository(User);
   try {
     await userRepository.save(user);
+    const confirmationToken = jwt.sign({ email }, JWT_SECRET, {
+      expiresIn: "1h",
+    });
+    await sendConfirmationEmail(email, confirmationToken);
+
     return res.status(201).json({
-      message: "Inscription réussie, vous pouvez à présent vous connecter",
+      message:
+        "Inscription réussie, vous allez recevoir un email de validation sur l'adresse indiquée",
     });
   } catch (err) {
     console.error(err);
