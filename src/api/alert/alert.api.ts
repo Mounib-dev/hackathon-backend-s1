@@ -61,7 +61,14 @@ export const retrieveAlerts: RequestHandler = async (
 ): Promise<any> => {
   const alertRepository = AppDataSource.getRepository(Alert);
   try {
-    const alerts = await alertRepository.find();
+    const alerts = await alertRepository.find({
+      relations: ["user"],
+      select: {
+        user: {
+          id: true,
+        },
+      },
+    });
     return res.status(200).json({ alerts });
   } catch (err: any) {
     console.error(err);
