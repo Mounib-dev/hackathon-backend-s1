@@ -20,6 +20,7 @@ import userRoute from "./routes/auth/profile.route";
 import usersRoute from "./routes/auth/users.route";
 
 import alertRoutes from "./routes/alert/alert.route";
+import noteRoutes from "./routes/note.route";
 import chatBotRoutes from "./routes/ai-assistance/chatbot.route";
 import aiAssistantRoutes from "./routes/ai-assistance/assistant";
 import chatRoomsRoutes from "./routes/chatroom/chatroom.route";
@@ -47,6 +48,7 @@ app.use("/api/v1", apiRoute);
 app.use("/api/v1/user", registerRoutes, userRoute, usersRoute);
 app.use("/api/v1/auth", loginRoute);
 app.use("/api/v1/alert", alertRoutes);
+app.use("/api/v1/note", noteRoutes);
 app.use("/api/v1/chatbot", chatBotRoutes);
 app.use("/api/v1/ai-assistant", aiAssistantRoutes);
 app.use("/api/v1/chatroom", chatRoomsRoutes);
