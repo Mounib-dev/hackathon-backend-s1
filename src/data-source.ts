@@ -3,6 +3,7 @@ import { DataSource } from "typeorm";
 
 import { User } from "./entity/User";
 import { Alert } from "./entity/Alert";
+import { Note } from "./entity/Note";
 import { ChatbotConversation } from "./entity/ChatbotConversation";
 import { Message } from "./entity/Message";
 import { ChatRoom } from "./entity/ChatRoom";
@@ -16,7 +17,7 @@ export const AppDataSource = new DataSource({
   database: process.env.DATABASE_NAME,
   synchronize: true,
   logging: false,
-  entities: [User, Alert, ChatbotConversation, Message, ChatRoom],
+  entities: [User, Alert, ChatbotConversation, Message, ChatRoom, Note],
   migrations: [],
   subscribers: [],
 });

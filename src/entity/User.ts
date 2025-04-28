@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany } from "typeorm";
 import { Alert } from "./Alert";
 import { ChatbotConversation } from "./ChatbotConversation";
 import { Message } from "./Message";
+import { Note } from "./Note";
 
 export enum UserRole {
   USER = "user",
@@ -48,6 +49,13 @@ export class User {
 
   @OneToMany(() => Message, (message) => message.user)
   messages!: Message[];
+
+  @OneToMany(() => Note, (note) => note.user)
+notesReceived!: Note[];
+
+@OneToMany(() => Note, (note) => note.rater)
+notesGiven!: Note[];
+
 
   constructor(
     firstName: string,
